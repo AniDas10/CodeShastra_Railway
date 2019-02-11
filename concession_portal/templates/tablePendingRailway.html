@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Responsive</title>
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+  <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">  
+  <script src="{% static 'script.js' %}"></script>
+</head>
+
+<body>
+    <div id='cssmenu'>
+        <ul>
+            <li><a style="font-size: 1.2em;"><i class="fas fa-subway" style="font-size: 1.2em; margin-right: 0.6rem;"></i> ConCErad</a></li>
+            <li style="margin-left: auto; "><a href="{% url 'approvedApp_railway' %}" style="font-size: 1.2em; margin-right: 0.6rem;">Approved Applications</a></li>
+            <li><a href="{% url 'pendingApp_railway' %}" style="font-size: 1.2em;">Pending Applications</a></li> 
+        </ul>
+    </div>
+  <h1><i class="fas fa-scroll"></i> Pending Applications</h1>
+  <div class="container" style="margin: 1rem auto !important;">
+    <form id="search_form" action="{% url 'searchPendingRailway' %}" method="POST">
+        {% csrf_token %}
+      <input class="search_input" id="searchText" type="text" name="search" placeholder="Search By Id..." required/>
+      <a href="javascript:{document.getElementById('search_form').submit()}" class="search_link"><i class="fas fa-search" style="font-size: 1.6em; margin-left: 0.6rem;"></i></a>
+    </form>
+  </div>
+{% if students %}
+<table class="container">
+	<thead>
+		<tr>
+      <th>Aadhar Id</th>
+      <th>Name</th>
+      <th>DOB</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Address</th>
+      <th>PrevPass</th>
+      <th>Class</th>
+      <th>Date</th>
+      <th>Actions</th>
+		</tr>
+  </thead>
+	<tbody>
+      {% for student in students %}
+      <tr>
+        {% if student.isApproved_railway %}
+          <td class="approved">{{student.student_aadharId}}</td>
+        {% else %}
+          <td class="pending">{{student.student_aadharId}}</td>
+        {% endif %}
+        <td>{{student.student_fullname}}</td>
+        <td>{{student.student_dob}}</td>
+        <td>{{student.source_station}}</td>
+        <td>{{student.destination_station}}</td>
+        <td>{{student.student_address}}</td>
+        <td>{{student.student_prevPassId}}</td>
+        <td>{{student.train_class}}</td>
+        <td>{{student.get_application_date}}</td>
+
+        <td><a href="javascript:{document.getElementById('student.id').submit()}" style="color: #ccc;"><i class="fas fa-edit fa-2x hover-pointer"></i></a></td>
+        <form method="POST" id="student.id" action="{% url 'pendingToapproved_railway' student.id %}" style="display: none;">{% csrf_token %}</form>
+      </tr>
+      {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<h2 style="text-align: center; color: #FB667A; font-size: 3em;">No Results Found !!</h2>
+{% endif %}
+
+
+
+</body>
+
+</html>
